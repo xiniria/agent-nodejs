@@ -6,14 +6,15 @@ import { TCollectionName, TFieldName, TRow, TSchema } from '../../templates';
 export interface ComputedDefinition<
   S extends TSchema = TSchema,
   N extends TCollectionName<S> = TCollectionName<S>,
+  C extends TFieldName<S, N> = TFieldName<S, N>,
 > {
   readonly columnType: ColumnType;
-  readonly dependencies: TFieldName<S, N>[];
+  readonly dependencies: C[];
   readonly defaultValue?: unknown;
   readonly enumValues?: string[];
 
   getValues(
-    records: TRow<S, N>[],
+    records: Pick<TRow<S, N>, C>[],
     context: CollectionCustomizationContext<S, N>,
   ): Promise<unknown[]> | unknown[];
 }
@@ -21,6 +22,7 @@ export interface ComputedDefinition<
 export interface DeprecatedComputedDefinition<
   S extends TSchema = TSchema,
   N extends TCollectionName<S> = TCollectionName<S>,
-> extends Omit<ComputedDefinition<S, N>, 'columnType'> {
+  C extends TFieldName<S, N> = TFieldName<S, N>,
+> extends Omit<ComputedDefinition<S, N, C>, 'columnType'> {
   readonly columnType: 'Timeonly';
 }

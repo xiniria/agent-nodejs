@@ -174,14 +174,20 @@ export default class CollectionCustomizer<
    * });
    */
   addField: {
-    (name: string, definition: ComputedDefinition<S, N>): CollectionCustomizer<S, N>;
+    <C extends TFieldName<S, N> = TFieldName<S, N>>(
+      name: string,
+      definition: ComputedDefinition<S, N, C>,
+    ): CollectionCustomizer<S, N>;
     /** @deprecated
      * Use 'Time' instead of 'Timeonly' as your columnType
      * */
-    (name: string, definition: DeprecatedComputedDefinition<S, N>): CollectionCustomizer<S, N>;
-  } = (
+    <C extends TFieldName<S, N> = TFieldName<S, N>>(
+      name: string,
+      definition: DeprecatedComputedDefinition<S, N, C>,
+    ): CollectionCustomizer<S, N>;
+  } = <C extends TFieldName<S, N> = TFieldName<S, N>>(
     name: string,
-    definition: DeprecatedComputedDefinition<S, N> | ComputedDefinition<S, N>,
+    definition: DeprecatedComputedDefinition<S, N, C> | ComputedDefinition<S, N, C>,
   ): this => {
     return this.pushCustomization(async () => {
       const collectionBeforeRelations = this.stack.earlyComputed.getCollection(this.name);
@@ -198,7 +204,7 @@ export default class CollectionCustomizer<
         ? collectionBeforeRelations
         : collectionAfterRelations;
 
-      collection.registerComputed(name, mapDeprecated<S, N>(definition));
+      collection.registerComputed(name, mapDeprecated<S, N, C>(definition));
     });
   };
 
