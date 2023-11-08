@@ -14,7 +14,7 @@ export interface ComputedDefinition<
   readonly enumValues?: string[];
 
   getValues(
-    records: Pick<TRow<S, N>, C>[],
+    records: C extends keyof S[N]['plain'] ? Pick<TRow<S, N>, C>[] : TRow<S, N>[],
     context: CollectionCustomizationContext<S, N>,
   ): Promise<unknown[]> | unknown[];
 }
